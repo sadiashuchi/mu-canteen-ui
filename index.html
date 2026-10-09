@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Metropolitan University Canteen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3F1;--card:#fff;--ink:#17302B;--mute:#5E7771;--line:#D5E0DC;--brand:#0E6B5C;--brand-d:#0A4F44;--mango:#F4B223;--red:#C0392B;--ok:#1E8E5A;--r:14px}
+*{box-sizing:border-box;margin:0}
+body{font-family:"DM Sans",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;min-height:100vh}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--mango);outline-offset:2px}
+header{background:var(--brand);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
+header h1{font-size:1.25rem;font-weight:700;margin-right:auto}
+.who{display:flex;align-items:center;gap:8px;background:var(--brand-d);padding:6px 12px;border-radius:99px;font-size:.9rem}
+.who select{width:auto;padding:4px;background:transparent;border:0;color:#fff;font-weight:600;cursor:pointer}
+.who option{color:#000}
+nav{display:flex;gap:6px;padding:12px 20px 0;max-width:1000px;margin:auto}
+nav button{border:0;background:transparent;padding:10px 18px;border-radius:10px 10px 0 0;cursor:pointer;font-weight:600;color:var(--mute)}
+nav button[aria-selected=true]{background:var(--card);color:var(--brand)}
+nav .count{background:var(--mango);color:#000;border-radius:99px;padding:0 8px;font-size:.8rem;margin-left:4px}
+main{max-width:1000px;margin:auto;background:var(--card);padding:22px 20px 40px;border-radius:0 0 var(--r) var(--r);min-height:60vh}
+.hide{display:none}
+.seg{display:inline-flex;border:2px solid var(--brand);border-radius:99px;overflow:hidden;margin-bottom:18px}
+.seg button{border:0;background:#fff;padding:8px 22px;cursor:pointer;font-weight:600;color:var(--brand)}
+.seg button[aria-pressed=true]{background:var(--brand);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.food{border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px}
+.food .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.food h3{font-size:1.1rem}
+.price{font-weight:700;font-size:1.1rem;color:var(--brand)}
+.tag{font-size:.8rem;padding:2px 10px;border-radius:99px;font-weight:600}
+.tag.in{background:#DDF3E8;color:#14633F}.tag.out{background:#F6DAD6;color:#8E2A1F}
+.tag.warn{background:#FCEBC2;color:#7A5200}.tag.info{background:#DCEAF7;color:#1F4E79}
+.food.off{opacity:.6;background:#F7F9F8}
+.qty{display:flex;align-items:center;gap:10px;margin-top:auto}
+.qty button{width:34px;height:34px;border-radius:50%;border:1px solid var(--brand);background:#fff;color:var(--brand);font-size:1.2rem;cursor:pointer}
+.qty button:disabled{border-color:var(--line);color:var(--line);cursor:not-allowed}
+.qty b{min-width:20px;text-align:center}
+.btn{border:0;background:var(--brand);color:#fff;padding:12px 22px;border-radius:10px;font-weight:700;cursor:pointer}
+.btn:hover{background:var(--brand-d)}.btn:disabled{background:var(--line);color:var(--mute);cursor:not-allowed}
+.btn.ghost{background:#fff;color:var(--brand);border:1px solid var(--brand)}
+.bar{position:sticky;bottom:12px;margin-top:18px;background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.bar .btn{background:var(--mango);color:#000}
+.two{display:grid;grid-template-columns:1.1fr 1fr;gap:26px}
+@media(max-width:760px){.two{grid-template-columns:1fr}nav button{padding:10px 12px}}
+h2{font-size:1.15rem;margin-bottom:12px}
+.line{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px dashed var(--line)}
+.total{font-size:1.2rem;font-weight:700}
+label{display:block;font-weight:600;font-size:.9rem;margin:12px 0 4px}
+select,input[type=text]{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.pay{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pay label{margin:0;border:1px solid var(--line);border-radius:10px;padding:10px;cursor:pointer;display:flex;gap:8px;align-items:center;font-weight:500}
+.pay label:has(input:checked){border-color:var(--brand);background:#E4F2EE}
+.empty{text-align:center;color:var(--mute);padding:50px 10px}
+.order{border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.order .head{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.order .meta{color:var(--mute);font-size:.92rem}
+.steps{display:flex;margin:16px 0 8px;list-style:none;padding:0}
+.steps li{flex:1;text-align:center;font-size:.82rem;color:var(--mute);position:relative}
+.steps li::before{content:"";display:block;width:16px;height:16px;border-radius:50%;background:var(--line);margin:0 auto 4px;position:relative;z-index:1}
+.steps li::after{content:"";position:absolute;top:7px;left:-50%;width:100%;height:2px;background:var(--line)}
+.steps li:first-child::after{display:none}
+.steps li.done{color:var(--ink);font-weight:600}
+.steps li.done::before,.steps li.done::after{background:var(--ok)}
+.rider{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;background:#F3F7F6;padding:10px 12px;border-radius:10px;font-size:.92rem;align-items:center}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .25s}
+.toast.on{opacity:1}
+@media(prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Metropolitan University <span style="font-weight:500;opacity:.85">Canteen</span></h1>
+  <div class="who">
+    <select id="role" aria-label="Role"><option>Student</option><option>Faculty</option></select><span id="roleTag" class="tag warn"></span>
+    <select id="user" aria-label="Signed in as"></select>
+  </div>
+</header>
+<nav role="tablist">
+  <button role="tab" data-tab="menu" aria-selected="true">Menu</button>
+  <button role="tab" data-tab="cart" aria-selected="false">Cart <span class="count" id="cnt">0</span></button>
+  <button role="tab" data-tab="orders" aria-selected="false">My orders</button>
+</nav>
+<main>
+  <section id="menu">
+    <div class="seg" id="canteenSeg"></div>
+    <div class="grid" id="foods"></div>
+    <div class="bar hide" id="bar"><span id="barTxt"></span><button class="btn" data-go="cart">View cart</button></div>
+  </section>
+
+  <section id="cart" class="hide">
+    <div class="two">
+      <div>
+        <h2>Your order</h2>
+        <div id="cartList"></div>
+      </div>
+      <div>
+        <h2>Delivery location</h2>
+        <label for="bld">Building</label><select id="bld"></select>
+        <label for="flr">Floor</label><select id="flr"></select>
+        <label for="room">Room</label><input type="text" id="room" placeholder="e.g. 304">
+        <label for="dp">Delivery point</label><select id="dp"></select>
+        <h2 style="margin-top:22px">Payment</h2>
+        <div class="pay" id="pay"></div>
+        <button class="btn" id="place" style="width:100%;margin-top:20px">Place order</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="orders" class="hide"></section>
+</main>
+<footer style="max-width:1000px;margin:14px auto;padding:0 20px;color:var(--mute);font-size:.85rem">Metropolitan University, Sylhet · Canteen Ordering System</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const bn=n=>Number(n).toLocaleString('en-US');
+const ord=n=>n+(['th','st','nd','rd'][(n%10<4&&(n%100<11||n%100>13))?n%10:0]);
+const tk=n=>'৳'+bn(n);
+
+/* ---- sample data (Users, Canteens, Food_Items, Locations) ---- */
+const users=[
+ {id:1,name:'Rafi Ahmed',role:'Student',code:'S-2101',dept:'EEE'},
+ {id:2,name:'Nusrat Jahan',role:'Student',code:'S-2102',dept:'BBA'},
+ {id:3,name:'Tanvir Hasan',role:'Student',code:'S-2103',dept:'Civil'},
+ {id:4,name:'Mitu Akter',role:'Student',code:'S-2104',dept:'English'},
+ {id:5,name:'Sabbir Rahman',role:'Student',code:'S-2105',dept:'Law'},
+ {id:6,name:'Farhana Islam',role:'Student',code:'S-2106',dept:'Pharmacy'},
+ {id:7,name:'Imran Hossain',role:'Student',code:'S-2107',dept:'Economics'},
+ {id:8,name:'Sadia Karim',role:'Student',code:'S-2108',dept:'Architecture'},
+ {id:9,name:'Arif Chowdhury',role:'Student',code:'S-2109',dept:'BBA'},
+ {id:10,name:'Tasnim Sultana',role:'Student',code:'S-2110',dept:'English'},
+ {id:11,name:'Rakib Uddin',role:'Student',code:'S-2111',dept:'EEE'},
+ {id:12,name:'Jannatul Ferdous',role:'Student',code:'S-2112',dept:'Law'},
+ {id:101,name:'Dr. Mahmudul Haque',role:'Faculty',code:'F-011',dept:'EEE'},
+ {id:102,name:'Dr. Nasima Begum',role:'Faculty',code:'F-012',dept:'English'},
+ {id:103,name:'Mr. Kamrul Alam',role:'Faculty',code:'F-013',dept:'BBA'},
+ {id:104,name:'Dr. Rezaul Karim',role:'Faculty',code:'F-014',dept:'Pharmacy'},
+ {id:105,name:'Ms. Shamima Nasrin',role:'Faculty',code:'F-015',dept:'Law'},
+ {id:106,name:'Engr. Abdul Malek',role:'Faculty',code:'F-016',dept:'Civil'},
+ {id:107,name:'Dr. Farzana Yasmin',role:'Faculty',code:'F-017',dept:'Economics'},
+ {id:108,name:'Ar. Shahidul Islam',role:'Faculty',code:'F-018',dept:'Architecture'}];
+const canteens=[{id:1,name:'Canteen 1'},{id:2,name:'Canteen 2'}];
+const foods=[
+ {id:1,c:1,name:'Khichuri with Egg',price:90,ok:true},{id:2,c:1,name:'Chicken Biryani',price:160,ok:true},
+ {id:3,c:1,name:'Paratha & Vaji',price:40,ok:true},{id:4,c:1,name:'Singara (2 pcs)',price:20,ok:false},
+ {id:5,c:1,name:'Milk Tea',price:15,ok:true},{id:6,c:2,name:'Bhorta & Rice',price:70,ok:true},
+ {id:7,c:2,name:'Beef Tehari',price:180,ok:true},{id:8,c:2,name:'Chicken Burger',price:120,ok:false},
+ {id:9,c:2,name:'French Fries',price:60,ok:true},{id:10,c:2,name:'Cold Coffee',price:80,ok:true}];
+const buildings={'Academic Building 1':[1,2,3,4,5,6],'Academic Building 2':[1,2,3,4],'Library':[1,2,3],'Student Hostel':[1,2,3,4,5]};
+const points=['Reception','Room door','Corridor','Ground floor gate'];
+const payMethods=['bKash','Nagad','Card','Cash on delivery'];
+const riders=['Karim','Jahid','Nasir'];
+const steps=['Placed','Preparing','On the way','Delivered'];
+
+let me=users[0], canteen=1, cart={}, orders=[
+ {id:1003,user:101,total:180,loc:'Academic Building 2, 2nd floor, Room 210, Room door',items:[['Beef Tehari',1]],pay:'Card',paid:true,rider:'Nasir',step:1},
+ {id:1002,user:2,total:95,loc:'Library, 2nd floor, Room 201, Reception',items:[['Cold Coffee',1],['Milk Tea',1]],pay:'Nagad',paid:true,rider:'Jahid',step:2},
+ {id:1001,user:1,total:250,loc:'Academic Building 1, 3rd floor, Room 304, Room door',items:[['Chicken Biryani',1],['Khichuri with Egg',1]],pay:'bKash',paid:true,rider:'Karim',step:2},
+ {id:1000,user:1,total:55,loc:'Library, 2nd floor, Room 201, Reception',items:[['Paratha & Vaji',1],['Milk Tea',1]],pay:'Cash on delivery',paid:true,rider:'Jahid',step:3}];
+let nextId=1004;
+
+/* ---- helpers ---- */
+const cartCount=()=>Object.values(cart).reduce((a,b)=>a+b,0);
+const cartTotal=()=>Object.entries(cart).reduce((s,[id,q])=>s+foods.find(f=>f.id==id).price*q,0);
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2200)}
+function show(tab){
+  $$('main>section').forEach(s=>s.classList.toggle('hide',s.id!==tab));
+  $$('nav button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab));
+  if(tab==='cart')renderCart(); if(tab==='orders')renderOrders();
+}
+
+/* ---- menu ---- */
+function renderSeg(){
+  $('#canteenSeg').innerHTML=canteens.map(c=>`<button aria-pressed="${c.id===canteen}" data-c="${c.id}">${c.name}</button>`).join('');
+}
+function renderFoods(){
+  $('#foods').innerHTML=foods.filter(f=>f.c===canteen).map(f=>{
+    const q=cart[f.id]||0;
+    return `<article class="food ${f.ok?'':'off'}">
+      <div class="top"><h3>${f.name}</h3><span class="price">${tk(f.price)}</span></div>
+      <span class="tag ${f.ok?'in':'out'}" style="align-self:flex-start">${f.ok?'Available':'Unavailable'}</span>
+      <div class="qty">
+        <button data-m="${f.id}" aria-label="Decrease" ${q?'':'disabled'}>−</button><b>${bn(q)}</b>
+        <button data-p="${f.id}" aria-label="Increase" ${f.ok?'':'disabled'}>+</button>
+      </div></article>`}).join('');
+  const n=cartCount();
+  $('#cnt').textContent=bn(n);
+  $('#bar').classList.toggle('hide',!n);
+  $('#barTxt').textContent=`${bn(n)} item${n>1?'s':''} · ${tk(cartTotal())}`;
+}
+
+/* ---- cart & checkout ---- */
+function renderCart(){
+  const rows=Object.entries(cart).map(([id,q])=>{const f=foods.find(x=>x.id==id);
+    return `<div class="line"><span>${f.name} × ${bn(q)}<br><small style="color:var(--mute)">${canteens.find(c=>c.id===f.c).name}</small></span><b>${tk(f.price*q)}</b></div>`}).join('');
+  $('#cartList').innerHTML=rows?rows+`<div class="line total"><span>Total</span><span>${tk(cartTotal())}</span></div>`
+    :'<div class="empty">Your cart is empty. Pick something from the menu.</div>';
+  $('#place').disabled=!rows;
+}
+function fillFloors(){
+  $('#flr').innerHTML=buildings[$('#bld').value].map(n=>`<option value="${n}">${ord(n)} floor</option>`).join('');
+}
+
+/* ---- orders ---- */
+function renderOrders(){
+  const mine=orders.filter(o=>o.user===me.id);
+  if(!mine.length){$('#orders').innerHTML='<div class="empty">No orders yet.</div>';return}
+  $('#orders').innerHTML=mine.map(o=>`<article class="order">
+    <div class="head"><b>Order #${o.id}</b>
+      <span><span class="tag ${o.paid?'in':'warn'}">${o.paid?'Payment complete':'Payment pending'}</span> <span class="tag info">${o.pay}</span></span></div>
+    <div class="meta">${o.items.map(i=>i[0]+' × '+bn(i[1])).join(', ')}</div>
+    <div class="meta">📍 ${o.loc}</div>
+    <ol class="steps">${steps.map((s,i)=>`<li class="${i<=o.step?'done':''}">${s}</li>`).join('')}</ol>
+    <div class="rider"><span>Delivery: <b>${o.rider}</b></span><span>Total <b>${tk(o.total)}</b></span>
+      ${o.step<3?`<button class="btn ghost" data-adv="${o.id}" style="padding:6px 12px">Advance status (demo)</button>`:'<span class="tag in">Delivered</span>'}</div>
+  </article>`).join('');
+}
+
+/* ---- events ---- */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button'); if(!t)return;
+  if(t.dataset.tab)show(t.dataset.tab);
+  if(t.dataset.go)show(t.dataset.go);
+  if(t.dataset.c){canteen=+t.dataset.c;renderSeg();renderFoods()}
+  if(t.dataset.p){cart[t.dataset.p]=(cart[t.dataset.p]||0)+1;renderFoods()}
+  if(t.dataset.m){const k=t.dataset.m;cart[k]--;if(!cart[k])delete cart[k];renderFoods()}
+  if(t.dataset.adv){const o=orders.find(x=>x.id==t.dataset.adv);o.step++;if(o.step===3)o.paid=true;renderOrders()}
+});
+$('#bld').onchange=fillFloors;
+$('#user').onchange=pickUser;
+$('#place').onclick=()=>{
+  const room=$('#room').value.trim();
+  if(!room){toast('Enter a room number');$('#room').focus();return}
+  const pay=document.querySelector('input[name=pay]:checked').value;
+  orders.unshift({id:nextId++,user:me.id,total:cartTotal(),
+    loc:`${$('#bld').value}, ${ord($('#flr').value)} floor, Room ${room}, ${$('#dp').value}`,
+    items:Object.entries(cart).map(([id,q])=>[foods.find(f=>f.id==id).name,q]),
+    pay,paid:pay!=='Cash on delivery',rider:riders[Math.floor(Math.random()*riders.length)],step:0});
+  cart={};$('#room').value='';renderFoods();show('orders');toast('Order placed');
+};
+
+/* ---- init ---- */
+function fillUsers(){const r=$('#role').value;$('#user').innerHTML=users.filter(u=>u.role===r).map(u=>`<option value="${u.id}">${u.name} (${u.code})</option>`).join('');pickUser()}
+function pickUser(){me=users.find(u=>u.id==$('#user').value);$('#roleTag').textContent=me.code+' · '+me.dept;renderOrders()}
+$('#role').onchange=fillUsers;
+$('#bld').innerHTML=Object.keys(buildings).map(b=>`<option>${b}</option>`).join('');
+$('#dp').innerHTML=points.map(p=>`<option>${p}</option>`).join('');
+$('#pay').innerHTML=payMethods.map((m,i)=>`<label><input type="radio" name="pay" value="${m}" ${i?'':'checked'}>${m}</label>`).join('');
+fillFloors();renderSeg();renderFoods();fillUsers();
+</script>
+</body>
+</html>
